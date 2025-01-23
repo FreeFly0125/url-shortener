@@ -17,6 +17,10 @@ export const signIn = async (req: Request, res: Response) => {
 
 export const signUp = async (req: Request, res: Response) => {
   const data: AuthData = req.body;
+
+  const user = await AuthService.getUser(data.username, data.password);
+  if (user.username) return res.status(409).send({ success: false });
+
   const result = await AuthService.newUser(data.username, data.password);
   return result
     ? res.status(200).send({ success: true })
