@@ -24,3 +24,13 @@ export const new_url_set = async (orgUrl: string, shortUrl: string) => {
     shorten: shortUrl,
   });
 };
+
+export const update_short_url = async (id: number, newUrl: string) => {
+  const result = await AppDataSource.getRepository(UrlEntity).update(
+    { id: id },
+    {
+      shorten: newUrl,
+    }
+  );
+  return result;
+};
