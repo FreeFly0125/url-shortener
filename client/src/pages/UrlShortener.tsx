@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { FaClipboard, FaCheck } from "react-icons/fa";
 import { FiExternalLink } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 import validator from "validator";
+import { withMainlayout } from "../layouts";
 
-export const UrlShortener: React.FC = () => {
+export const UrlShortener: React.FC = withMainlayout(() => {
   const SERVER_API = process.env.REACT_APP_SERVER_URL;
   const URL_PREFIX = process.env.REACT_APP_URL_PREFIX;
   const jwtoken = localStorage.getItem("token");
+  const navigate = useNavigate();
 
   const [url, setUrl] = useState<string>("");
   const [shortUrl, setShortUrl] = useState<string>("");
@@ -118,12 +121,20 @@ export const UrlShortener: React.FC = () => {
           className="border border-gray-300 p-2 w-full rounded"
           placeholder="https://example.com"
         />
-        <button
-          onClick={handleShorten}
-          className="mt-4 bg-purple-600 text-white p-2 rounded"
-        >
-          Shorten
-        </button>
+        <div className="flex justify-between gap-4">
+          <button
+            onClick={handleShorten}
+            className="mt-4 bg-purple-600 text-white p-2 rounded"
+          >
+            Shorten
+          </button>
+          <button
+            className="mt-4 bg-green-600 text-white p-2 rounded"
+            onClick={() => navigate("/")}
+          >
+            Back to Dashboard
+          </button>
+        </div>
 
         {shortUrl && (
           <div className="mt-4 p-4">
@@ -178,4 +189,4 @@ export const UrlShortener: React.FC = () => {
       </div>
     </div>
   );
-};
+});

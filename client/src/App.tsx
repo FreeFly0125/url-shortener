@@ -1,6 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
-import { Dashboard, UserAuth } from "./pages";
+import { Dashboard, UrlShortener, UserAuth } from "./pages";
 import { PATH } from "./consts";
 import NotFound from "./pages/NotFound";
 
@@ -12,6 +12,7 @@ function App() {
         <Route path={PATH.DASHBOARD} element={<Dashboard />} />
         <Route path={PATH.SIGNIN} element={<UserAuth isSignIn={true} />} />
         <Route path={PATH.SIGNUP} element={<UserAuth isSignIn={false} />} />
+        <Route path={PATH.NEWURL} element={<UrlShortener />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

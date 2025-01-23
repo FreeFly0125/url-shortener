@@ -87,9 +87,18 @@ export const UrlTable: React.FC = () => {
     }
   };
 
-  const handleDelete = (id: number) => {
-    console.log(`Delete clicked for id: ${id}`);
-    setData((prevData) => prevData.filter((item) => item.id !== id));
+  const handleDelete = async (id: number) => {
+    const response = await fetch(`${SERVER_API}/url`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${jwtoken}`,
+      },
+      body: JSON.stringify({ id: id }),
+    });
+    if (response.ok)
+      setData((prevData) => prevData.filter((item) => item.id !== id));
+    else alert("Failed to delte record!");
   };
 
   const handleOpenUrl = (url: string) => {
@@ -101,7 +110,7 @@ export const UrlTable: React.FC = () => {
   };
 
   return (
-    <div className="flex p-4 items-center justify-center">
+    <div className="flex items-center justify-center w-full">
       <div className="flex w-3/4">
         <table className="table-auto border-collapse border border-gray-300 w-full">
           <thead>

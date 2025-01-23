@@ -8,5 +8,6 @@ urlRouter.get("/origin", UrlController.getOriginUrl);
 urlRouter.get("/", UrlController.getUrls);
 urlRouter.post("/", UrlController.genShortenUrl);
 urlRouter.patch("/", UrlController.updateShortenUrl);
+urlRouter.delete("/", UrlController.deleteShortenUrl);
 
 export default urlRouter;

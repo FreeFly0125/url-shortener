@@ -44,7 +44,10 @@ const generateUrl = (length: number): string => {
 export const genShortenUrl = async (req: Request, res: Response) => {
   const { orgUrl }: { orgUrl: string } = req.body;
 
-  const record = await UrlService.getShorten(orgUrl, req.query.username as string);
+  const record = await UrlService.getShorten(
+    orgUrl,
+    req.query.username as string
+  );
   if (record) return res.status(409).send({ shortUrl: record.shorten });
 
   const shortUrl = generateUrl(6);
@@ -60,7 +63,10 @@ export const genShortenUrl = async (req: Request, res: Response) => {
 
 export const updateShortenUrl = async (req: Request, res: Response) => {
   const { orgUrl, newUrl }: { orgUrl: string; newUrl: string } = req.body;
-  const record = await UrlService.getShorten(orgUrl, req.query.username as string);
+  const record = await UrlService.getShorten(
+    orgUrl,
+    req.query.username as string
+  );
   if (!record) {
     return res.status(404).send({ shortUrl: "" });
   }
@@ -72,4 +78,12 @@ export const updateShortenUrl = async (req: Request, res: Response) => {
   return result
     ? res.status(200).send({ shortUrl: newUrl })
     : res.status(500).send({ shortUrl: "" });
+};
+
+export const deleteShortenUrl = async (req: Request, res: Response) => {
+  const { id } = req.body;
+  const result = await UrlService.deleteUrl(id);
+  return result
+    ? res.status(200).send({ success: true })
+    : res.status(500).send({ success: false });
 };

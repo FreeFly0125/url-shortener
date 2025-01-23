@@ -49,3 +49,10 @@ export const updateUrl = async (
   );
   return result;
 };
+
+export const deleteUrl = async (id: number) => {
+  const result = await AppDataSource.getRepository(UrlEntity).delete({
+    id: id,
+  });
+  return result;
+};
