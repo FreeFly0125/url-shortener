@@ -3,10 +3,10 @@ import { Router } from "express";
 
 const urlRouter = Router();
 
-urlRouter.get("/short", UrlController.get_shorten_url);
-urlRouter.get("/origin", UrlController.get_origin_url);
-urlRouter.get("/", UrlController.get_urls);
-urlRouter.post("/", UrlController.gen_shorten_url);
-urlRouter.patch("/", UrlController.update_shorten_url);
+urlRouter.get("/short", UrlController.genShortenUrl);
+urlRouter.get("/origin", UrlController.getOriginUrl);
+urlRouter.get("/", UrlController.getUrls);
+urlRouter.post("/", UrlController.genShortenUrl);
+urlRouter.patch("/", UrlController.updateShortenUrl);
 
 export default urlRouter;

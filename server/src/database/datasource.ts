@@ -1,6 +1,6 @@
 import { DataSource } from "typeorm";
 import dotenv from "dotenv";
-import { UrlEntity } from "./entity";
+import { AuthEntity, UrlEntity } from "./entity";
 
 dotenv.config();
 
@@ -11,7 +11,7 @@ export const AppDataSource = new DataSource({
   password: process.env.DB_PASS,
   port: Number(process.env.DB_PORT) || 5432,
   database: process.env.DB_NAME,
-  entities: [UrlEntity],
+  entities: [UrlEntity, AuthEntity],
   logging: false,
   synchronize: true,
 });
