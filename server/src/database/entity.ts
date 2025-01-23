@@ -10,6 +10,9 @@ export class UrlEntity {
 
   @Column({ name: "shorten", type: "varchar", length: "32" })
     shorten: string;
+
+  @Column({ name: "username", type: "varchar", length: "32" })
+    username: string;
 }
 
 @Entity({ name: "auth" })

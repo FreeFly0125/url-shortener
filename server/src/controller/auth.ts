@@ -1,5 +1,13 @@
 import { Request, Response } from "express";
 import { AuthService } from "service";
+import dotenv from "dotenv";
+import uuid from "uuid";
+import jwt from "jsonwebtoken";
+
+dotenv.config();
+
+const TOKEN_SECRET: string = process.env.TOKEN_SECRET || uuid.v4();
+const TOKEN_EXPIRATION_TIME: number = 3600;
 
 interface AuthData {
   username: string;
@@ -12,7 +20,12 @@ export const signIn = async (req: Request, res: Response) => {
   const result = await AuthService.getUser(data.username, data.password);
   if (!result.username) return res.status(404).send("User not found!");
   else if (!result.password) return res.status(401).send("Incorrect password!");
-  else return res.status(200).send({ username: result.username });
+
+  const token = jwt.sign({ username: result.username }, TOKEN_SECRET, {
+    expiresIn: TOKEN_EXPIRATION_TIME,
+  });
+
+  return res.status(200).send({ username: result.username, token: token });
 };
 
 export const signUp = async (req: Request, res: Response) => {
