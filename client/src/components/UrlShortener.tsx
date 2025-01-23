@@ -6,9 +6,10 @@ export const UrlShortener: React.FC = () => {
   const SERVER_API = process.env.REACT_APP_SERVER_URL;
   const URL_PREFIX = process.env.REACT_APP_URL_PREFIX;
 
-  const [url, setUrl] = useState("");
-  const [shortUrl, setShortUrl] = useState("");
-  const [error, setError] = useState("");
+  const [url, setUrl] = useState<string>("");
+  const [shortUrl, setShortUrl] = useState<string>("");
+  const [error, setError] = useState<string>("");
+  const [canReset, setCanReset] = useState<boolean>(false);
 
   const isValidShortUrl = (url: string) => {
     const regex = new RegExp(`^${URL_PREFIX}/[a-zA-Z0-9]{6}$`);
@@ -40,13 +41,16 @@ export const UrlShortener: React.FC = () => {
     if (response.ok) {
       const data = await response.json();
       setShortUrl(data.shortUrl);
+    } else if (response.status === 409) {
+      setError("Url is already existing!");
     } else {
       setError("Failed to shorten the URL.");
     }
   };
 
   const handleShortUrlChange = async () => {
-    if (isValidShortUrl(shortUrl)) {
+    setError("");
+    if (!isValidShortUrl(shortUrl)) {
       setError(
         "Short URL must start with the prefix and be 6 characters long."
       );
@@ -64,6 +68,7 @@ export const UrlShortener: React.FC = () => {
     if (response.ok) {
       const data = await response.json();
       setShortUrl(data.shortUrl);
+      setCanReset(false);
     } else {
       setError("Failed to reset the URL.");
     }
@@ -97,13 +102,19 @@ export const UrlShortener: React.FC = () => {
               <input
                 type="text"
                 value={shortUrl}
-                onChange={(e) => setShortUrl(e.target.value)}
+                onChange={(e) => {
+                  setShortUrl(e.target.value);
+                  setCanReset(true);
+                }}
                 className="border border-gray-300 p-2 w-1/2 rounded"
               />
               <div className="flex gap-2">
                 <button
-                  className="pl-4 pr-4 flex items-center bg-green-600 text-white p-1 rounded"
+                  className={`pl-4 pr-4 flex items-center ${
+                    canReset ? "bg-green-600" : "bg-gray-600"
+                  } text-white p-1 rounded`}
                   onClick={handleShortUrlChange}
+                  disabled={!canReset}
                 >
                   Reset
                 </button>

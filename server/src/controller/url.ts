@@ -37,9 +37,25 @@ const generate_url = (length: number): string => {
 
 export const gen_shorten_url = async (req: Request, res: Response) => {
   const { orgUrl }: { orgUrl: string } = req.body;
+
+  const record = await UrlService.get_shorten_url(orgUrl);
+  if (record) return res.status(409).send({ shortUrl: record.shorten });
+
   const shortUrl = generate_url(6);
   const result = await UrlService.new_url_set(orgUrl, shortUrl);
   return result
     ? res.status(200).send({ shortUrl })
+    : res.status(500).send({ shortUrl: "" });
+};
+
+export const update_shorten_url = async (req: Request, res: Response) => {
+  const { orgUrl, newUrl }: { orgUrl: string; newUrl: string } = req.body;
+  const record = await UrlService.get_shorten_url(orgUrl);
+  if (!record) {
+    return res.status(404).send({ shortUrl: "" });
+  }
+  const result = await UrlService.update_short_url(record.id, newUrl);
+  return result
+    ? res.status(200).send({ shortUrl: newUrl })
     : res.status(500).send({ shortUrl: "" });
 };
