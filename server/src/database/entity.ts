@@ -11,3 +11,15 @@ export class UrlEntity {
   @Column({ name: "shorten", type: "varchar", length: "32" })
     shorten: string;
 }
+
+@Entity({ name: "auth" })
+export class AuthEntity {
+  @PrimaryGeneratedColumn({ name: "id" })
+    id: number;
+
+  @Column({ name: "username", type: "varchar", length: "32" })
+    username: string;
+
+  @Column({ name: "password", type: "varchar", length: "32" })
+    password: string;
+}
