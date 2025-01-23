@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { FaClipboard } from "react-icons/fa";
+import { FaClipboard, FaCheck } from "react-icons/fa";
+import { FiExternalLink } from "react-icons/fi";
 import validator from "validator";
 
 export const UrlShortener: React.FC = () => {
@@ -10,6 +11,7 @@ export const UrlShortener: React.FC = () => {
   const [shortUrl, setShortUrl] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [canReset, setCanReset] = useState<boolean>(false);
+  const [copied, setCopied] = useState<boolean>(false);
 
   const isValidShortUrl = (url: string) => {
     const regex = new RegExp(`^${URL_PREFIX}/[a-zA-Z0-9]{6}$`);
@@ -17,9 +19,6 @@ export const UrlShortener: React.FC = () => {
   };
 
   const handleShorten = async () => {
-    setError("");
-    setShortUrl("");
-
     if (!url) {
       setError("Please enter a URL.");
       return;
@@ -29,6 +28,11 @@ export const UrlShortener: React.FC = () => {
       setError("Please input a valid URL!");
       return;
     }
+
+    setError("");
+    setShortUrl("");
+    setCopied(false);
+    setCanReset(false);
 
     const response = await fetch(`${SERVER_API}/url`, {
       method: "POST",
@@ -74,6 +78,30 @@ export const UrlShortener: React.FC = () => {
     }
   };
 
+  const handleCopy = () => {
+    navigator.clipboard.writeText(shortUrl).then(() => {
+      setCopied(true);
+    });
+  };
+
+  const handleBrowseUrl = async () => {
+    const api = `${SERVER_API}/url/origin`;
+
+    const response = await fetch(`${api}?url=${shortUrl}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.status === 302) {
+        const data = await response.json();
+        window.open(data.orgUrl, "_blank");
+    } else {
+        setError("Url is not found!");
+    }
+  };
+
   return (
     <div className="flex items-center justify-center h-screen">
       <div className="p-4 bg-white shadow-md rounded w-1/2 h-1/2">
@@ -99,15 +127,24 @@ export const UrlShortener: React.FC = () => {
               Success! Here's your short URL:
             </p>
             <div className="flex justify-between">
-              <input
-                type="text"
-                value={shortUrl}
-                onChange={(e) => {
-                  setShortUrl(e.target.value);
-                  setCanReset(true);
-                }}
-                className="border border-gray-300 p-2 w-1/2 rounded"
-              />
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={shortUrl}
+                  onChange={(e) => {
+                    setShortUrl(e.target.value);
+                    setCanReset(true);
+                    setCopied(false);
+                  }}
+                  className="border border-gray-300 p-2 rounded"
+                />
+                <button
+                  className={`pl-4 pr-4 flex items-center border text-black p-1 rounded`}
+                  onClick={handleBrowseUrl}
+                >
+                  <FiExternalLink />
+                </button>
+              </div>
               <div className="flex gap-2">
                 <button
                   className={`pl-4 pr-4 flex items-center ${
@@ -118,8 +155,15 @@ export const UrlShortener: React.FC = () => {
                 >
                   Reset
                 </button>
-                <button className="pr-4 pl-4 flex items-center border-2 border-purple-600 text-white p-1 rounded">
-                  <FaClipboard className="mr-1" style={{ color: "purple" }} />
+                <button
+                  className="pr-4 pl-4 flex items-center border-2 border-purple-600 text-white p-1 rounded"
+                  onClick={handleCopy}
+                >
+                  {copied ? (
+                    <FaCheck className="mr-1" style={{ color: "purple" }} />
+                  ) : (
+                    <FaClipboard className="mr-1" style={{ color: "purple" }} />
+                  )}
                   <p className="text-purple-500">Copy</p>
                 </button>
               </div>
