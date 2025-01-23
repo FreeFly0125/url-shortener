@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FaClipboard } from "react-icons/fa";
+import validator from "validator";
 
 export const UrlShortener: React.FC = () => {
   const SERVER_API = process.env.REACT_APP_SERVER_URL;
@@ -10,8 +11,15 @@ export const UrlShortener: React.FC = () => {
 
   const handleShorten = async () => {
     setError("");
+    setShortUrl("");
+
     if (!url) {
       setError("Please enter a URL.");
+      return;
+    }
+
+    if (!validator.isURL(url)) {
+      setError("Please input a valid URL!");
       return;
     }
 
@@ -22,8 +30,6 @@ export const UrlShortener: React.FC = () => {
       },
       body: JSON.stringify({ orgUrl: url }),
     });
-
-    console.log(response);
 
     if (response.ok) {
       const data = await response.json();
@@ -52,8 +58,7 @@ export const UrlShortener: React.FC = () => {
           Shorten
         </button>
 
-        {error && <p className="text-red-500 mt-2">{error}</p>}
-        {shortUrl && (
+        {shortUrl ? (
           <div className="mt-4 p-4">
             <p className="text-green-600 mb-4">
               Success! Here's your short URL:
@@ -68,6 +73,8 @@ export const UrlShortener: React.FC = () => {
               </button>
             </div>
           </div>
+        ) : (
+          <p className="text-red-500 mt-2">{error}</p>
         )}
       </div>
     </div>
