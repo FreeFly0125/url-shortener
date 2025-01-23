@@ -1,31 +1,31 @@
 import { AppDataSource } from "database";
 import { UrlEntity } from "database/entity";
 
-export const get_all = async () => {
+export const getAll = async () => {
   return await AppDataSource.getRepository(UrlEntity).find();
 };
 
-export const get_shorten_url = async (orgUrl: string) => {
+export const getShorten = async (orgUrl: string) => {
   return await AppDataSource.getRepository(UrlEntity).findOneBy({
     origin: orgUrl,
   });
 };
 
-export const get_origin_url = async (shortUrl: string) => {
+export const getOrigin = async (shortUrl: string) => {
   const result = await AppDataSource.getRepository(UrlEntity).findOneBy({
     shorten: shortUrl,
   });
   return result;
 };
 
-export const new_url_set = async (orgUrl: string, shortUrl: string) => {
+export const newUrlSet = async (orgUrl: string, shortUrl: string) => {
   return await AppDataSource.getRepository(UrlEntity).insert({
     origin: orgUrl,
     shorten: shortUrl,
   });
 };
 
-export const update_short_url = async (id: number, newUrl: string) => {
+export const updateUrl = async (id: number, newUrl: string) => {
   const result = await AppDataSource.getRepository(UrlEntity).update(
     { id: id },
     {

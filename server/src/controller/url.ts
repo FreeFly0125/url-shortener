@@ -2,26 +2,26 @@ import { URL_PREFIX } from "consts";
 import { Request, Response } from "express";
 import { UrlService } from "service";
 
-export const get_urls = async (_req: Request, res: Response) => {
-  const urls = await UrlService.get_all();
+export const getUrls = async (_req: Request, res: Response) => {
+  const urls = await UrlService.getAll();
   return res.status(200).send(urls);
 };
 
-export const get_shorten_url = async (req: Request, res: Response) => {
-  const result = await UrlService.get_shorten_url(req.query.url as string);
+export const getShortenUrl = async (req: Request, res: Response) => {
+  const result = await UrlService.getShorten(req.query.url as string);
   return result
     ? res.status(302).send({ shortUrl: result.shorten })
     : res.status(404).send({ shortUrl: "" });
 };
 
-export const get_origin_url = async (req: Request, res: Response) => {
-  const result = await UrlService.get_origin_url(req.query.url as string);
+export const getOriginUrl = async (req: Request, res: Response) => {
+  const result = await UrlService.getOrigin(req.query.url as string);
   return result
     ? res.status(302).send({ orgUrl: result.origin })
     : res.status(404).send({ orgUrl: "" });
 };
 
-const generate_url = (length: number): string => {
+const generateUrl = (length: number): string => {
   const characters =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   let result = "";
@@ -35,26 +35,26 @@ const generate_url = (length: number): string => {
   return `${URL_PREFIX}${result}`;
 };
 
-export const gen_shorten_url = async (req: Request, res: Response) => {
+export const genShortenUrl = async (req: Request, res: Response) => {
   const { orgUrl }: { orgUrl: string } = req.body;
 
-  const record = await UrlService.get_shorten_url(orgUrl);
+  const record = await UrlService.getShorten(orgUrl);
   if (record) return res.status(409).send({ shortUrl: record.shorten });
 
-  const shortUrl = generate_url(6);
-  const result = await UrlService.new_url_set(orgUrl, shortUrl);
+  const shortUrl = generateUrl(6);
+  const result = await UrlService.newUrlSet(orgUrl, shortUrl);
   return result
     ? res.status(200).send({ shortUrl })
     : res.status(500).send({ shortUrl: "" });
 };
 
-export const update_shorten_url = async (req: Request, res: Response) => {
+export const updateShortenUrl = async (req: Request, res: Response) => {
   const { orgUrl, newUrl }: { orgUrl: string; newUrl: string } = req.body;
-  const record = await UrlService.get_shorten_url(orgUrl);
+  const record = await UrlService.getShorten(orgUrl);
   if (!record) {
     return res.status(404).send({ shortUrl: "" });
   }
-  const result = await UrlService.update_short_url(record.id, newUrl);
+  const result = await UrlService.updateUrl(record.id, newUrl);
   return result
     ? res.status(200).send({ shortUrl: newUrl })
     : res.status(500).send({ shortUrl: "" });
