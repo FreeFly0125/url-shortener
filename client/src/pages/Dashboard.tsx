@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { withMainlayout } from "../layouts";
-import { UrlShortener } from "../components";
+import { UrlShortener, UrlTable } from "../components";
 import { useNavigate } from "react-router-dom";
 
 export const Dashboard: React.FC = withMainlayout(() => {
@@ -13,5 +13,6 @@ export const Dashboard: React.FC = withMainlayout(() => {
     if (!(username && token)) navigate("/signin");
   }, []);
 
-  return <UrlShortener />;
+  // return <UrlShortener />;
+  return <UrlTable />;
 });
