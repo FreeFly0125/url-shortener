@@ -6,6 +6,7 @@ import validator from "validator";
 export const UrlShortener: React.FC = () => {
   const SERVER_API = process.env.REACT_APP_SERVER_URL;
   const URL_PREFIX = process.env.REACT_APP_URL_PREFIX;
+  const jwtoken = localStorage.getItem("token");
 
   const [url, setUrl] = useState<string>("");
   const [shortUrl, setShortUrl] = useState<string>("");
@@ -38,6 +39,7 @@ export const UrlShortener: React.FC = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${jwtoken}`,
       },
       body: JSON.stringify({ orgUrl: url }),
     });
@@ -65,6 +67,7 @@ export const UrlShortener: React.FC = () => {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${jwtoken}`,
       },
       body: JSON.stringify({ orgUrl: url, newUrl: shortUrl }),
     });
@@ -91,14 +94,15 @@ export const UrlShortener: React.FC = () => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${jwtoken}`,
       },
     });
 
     if (response.status === 302) {
-        const data = await response.json();
-        window.open(data.orgUrl, "_blank");
+      const data = await response.json();
+      window.open(data.orgUrl, "_blank");
     } else {
-        setError("Url is not found!");
+      setError("Url is not found!");
     }
   };
 

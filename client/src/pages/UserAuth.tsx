@@ -14,7 +14,8 @@ export const UserAuth: React.FC<UserAuthProps> = ({ isSignIn }) => {
 
   useEffect(() => {
     const username = localStorage.getItem("username");
-    if (username) navigate("/dashboard");
+    const token = localStorage.getItem("token");
+    if (username && token) navigate("/dashboard");
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {

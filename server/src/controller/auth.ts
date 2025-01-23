@@ -1,12 +1,11 @@
 import { Request, Response } from "express";
 import { AuthService } from "service";
 import dotenv from "dotenv";
-import uuid from "uuid";
 import jwt from "jsonwebtoken";
 
 dotenv.config();
 
-const TOKEN_SECRET: string = process.env.TOKEN_SECRET || uuid.v4();
+const TOKEN_SECRET: string = process.env.TOKEN_SECRET || "secret";
 const TOKEN_EXPIRATION_TIME: number = 3600;
 
 interface AuthData {
