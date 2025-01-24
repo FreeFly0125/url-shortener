@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface UserAuthProps {
@@ -11,6 +11,12 @@ export const UserAuth: React.FC<UserAuthProps> = ({ isSignIn }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const username = localStorage.getItem("username");
+    const token = localStorage.getItem("token");
+    if (username && token) navigate("/dashboard");
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,6 +37,7 @@ export const UserAuth: React.FC<UserAuthProps> = ({ isSignIn }) => {
         const data = await response.json();
         if (isSignIn) {
           localStorage.setItem("username", data.username);
+          localStorage.setItem("token", data.token);
           navigate("/dashboard");
         } else {
           alert("Successfully signed up!");
