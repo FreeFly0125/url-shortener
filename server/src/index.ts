@@ -5,8 +5,16 @@ import express, { NextFunction } from "express";
 import { Logger } from "utils";
 import { AppDataSource } from "database";
 import appRoute from "routes";
+import rateLimit from "express-rate-limit";
 
 dotenv.config();
+
+const limiter = rateLimit({
+  windowMs: 60 * 1000, // per 1 minute
+  limit: 100, // 100 requests
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+});
 
 const app = express();
 
@@ -23,6 +31,7 @@ const dbConnect = (next: NextFunction) => {
 app
   .use(cors())
   .use(express.json())
+  .use(limiter)
   .use("/health", (_req, res) => res.send("OK"))
   .use(appRoute);
 
