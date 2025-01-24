@@ -6,7 +6,7 @@ interface UserAuthProps {
 }
 
 export const UserAuth: React.FC<UserAuthProps> = ({ isSignIn }) => {
-  const SERVER_API = process.env.REACT_APP_SERVER_URL;
+  const SERVER_API = process.env.REACT_APP_SERVER_URL || "http://localhost:4000";
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");

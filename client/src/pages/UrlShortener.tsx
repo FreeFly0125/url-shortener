@@ -6,8 +6,8 @@ import validator from "validator";
 import { withMainlayout } from "../layouts";
 
 export const UrlShortener: React.FC = withMainlayout(() => {
-  const SERVER_API = process.env.REACT_APP_SERVER_URL;
-  const URL_PREFIX = process.env.REACT_APP_URL_PREFIX;
+  const SERVER_API = process.env.REACT_APP_SERVER_URL || "http://localhost:4000";
+  const URL_PREFIX = process.env.REACT_APP_URL_PREFIX || "https://short.ly";
   const jwtoken = localStorage.getItem("token");
   const navigate = useNavigate();
 

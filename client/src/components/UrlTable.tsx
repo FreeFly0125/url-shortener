@@ -17,8 +17,8 @@ interface UrlData {
 export const UrlTable: React.FC = () => {
   const navigate = useNavigate();
   const jwtoken = localStorage.getItem("token");
-  const SERVER_API = process.env.REACT_APP_SERVER_URL;
-  const URL_PREFIX = process.env.REACT_APP_URL_PREFIX;
+  const SERVER_API = process.env.REACT_APP_SERVER_URL || "http://localhost:4000";
+  const URL_PREFIX = process.env.REACT_APP_URL_PREFIX || "https://short.ly";
 
   const [data, setData] = useState<UrlData[]>([]);
   const [curId, setCurId] = useState<number | null>(null);

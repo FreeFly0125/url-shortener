@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 export const PreUrl: React.FC = () => {
   const navigate = useNavigate();
 
-  const SERVER_API = process.env.REACT_APP_SERVER_URL;
+  const SERVER_API = process.env.REACT_APP_SERVER_URL || "http://localhost:4000";
   const jwtoken = localStorage.getItem("token");
 
   const [inputValue, setInputValue] = useState("");
