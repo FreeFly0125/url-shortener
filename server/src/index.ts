@@ -1,23 +1,37 @@
+import { MESSAGES } from "consts";
+import cors from "cors";
 import dotenv from "dotenv";
-import { backendSetup, dbSetup } from "setup";
+import express, { NextFunction } from "express";
 import { Logger } from "utils";
+import { AppDataSource } from "database";
+import appRoute from "routes";
 
 dotenv.config();
 
-const setupServer = async () => {
-  try {
-    await dbSetup();
-  } catch (err) {
-    Logger.error("Failed to connect DB:", err);
-    return;
-  }
+const app = express();
 
+const dbConnect = (next: NextFunction) => {
   try {
-    await backendSetup();
+    AppDataSource.initialize();
+    Logger.error(MESSAGES.MSG_DB_CONNECTED);
+    next();
   } catch (err) {
-    Logger.error("Failed to start Server:", err);
-    return;
+    Logger.error(err);
   }
 };
 
-setupServer();
+app
+  .use(cors())
+  .use(express.json())
+  .use("/health", (_req, res) => res.send("OK"))
+  .use(appRoute);
+
+const PORT = process.env.SERVER_PORT || 4000;
+
+dbConnect(() => {
+  app.listen(PORT, () => {
+    Logger.log(MESSAGES.MSG_SERVER_STARTED);
+  });
+});
+
+export default app;
