@@ -1,1 +1,0 @@
-# TypeScript Node Boiler Platform
